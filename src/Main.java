@@ -29,7 +29,7 @@ public class Main {
 		List<Generator<MarkedValue<Integer>>> arrayGenerators = createArrayGenerators(baseGenerators);
 		List<Generator<MarkedValue<Integer>>> linkedListGenerators = createLinkedListGenerators(baseGenerators);
 
-		// Define algorithm-to-generators mapping
+		// Algorithm-to-generators mapping
 		Map<Class<? extends AbstractSortingAlgorithm>, List<Generator<MarkedValue<Integer>>>> algorithmGenerators = new HashMap<>();
 		List<Generator<MarkedValue<Integer>>> linkedListQuickSortGenerators = new ArrayList<>();
 		linkedListQuickSortGenerators.addAll(arrayGenerators);
@@ -37,7 +37,7 @@ public class Main {
 		algorithmGenerators.put(LinkedListQuickSort.class, linkedListQuickSortGenerators);
 		algorithmGenerators.put(ThreeWayMergeSort.class, arrayGenerators);
 
-		// Define algorithms and test parameters
+		// Algorithms and test parameters
 		List<AbstractSortingAlgorithm<MarkedValue<Integer>>> algorithms = createNonSwappingAlgorithms(markedComparator);
 		int[] sizes = {1, 5, 10, 25, 50, 80, 100, 150, 200, 250, 500, 1000, 2000, 5000, 10000, 20000, 100000};
 		int repetitions = 20;
@@ -52,8 +52,8 @@ public class Main {
 	private static List<Generator<Integer>> createBaseGenerators() {
 		List<Generator<Integer>> generators = new ArrayList<>();
 		generators.add(new RandomIntegerArrayGenerator(10));
-//		generators.add(new OrderedIntegerArrayGenerator());
-//		generators.add(new ReversedIntegerArrayGenerator());
+		generators.add(new OrderedIntegerArrayGenerator());
+		generators.add(new ReversedIntegerArrayGenerator());
 		generators.add(new ShuffledIntegerArrayGenerator());
 		return generators;
 	}
@@ -77,8 +77,8 @@ public class Main {
 	private static List<AbstractSortingAlgorithm<MarkedValue<Integer>>> createNonSwappingAlgorithms(
 			Comparator<MarkedValue<Integer>> markedComparator) {
 		List<AbstractSortingAlgorithm<MarkedValue<Integer>>> algorithms = new ArrayList<>();
-		algorithms.add(new LinkedListQuickSort<>(markedComparator, new FirstElementPivotStrategy<>()));
-//		algorithms.add(new ThreeWayMergeSort<>(markedComparator));
+		algorithms.add(new LinkedListQuickSort<>(markedComparator, new RandomPivotStrategy<>()));
+		algorithms.add(new ThreeWayMergeSort<>(markedComparator));
 		return algorithms;
 	}
 
@@ -115,10 +115,10 @@ public class Main {
 
 	private static void printResults(List<TestResult> results) {
 		System.out.println("\nWyniki testów:");
-		System.out.println("Algorytm\tGenerator\tTyp\tRozmiar\tPorównania\tOdch. porównań\tCzas (ms)\tOdch. czasu");
+		System.out.println("Algorytm\tGenerator\tTyp\tRozmiar\tPorównania\tOdch. porównań\tCzas (ms)\tOdch. czasu\tStabilne");
 		for (TestResult tr : results) {
 			Result res = tr.result;
-			System.out.printf("%s\t%s\t%s\t%d\t%s\t%s\t%s\t%s\t%n",
+			System.out.printf("%s\t%s\t%s\t%d\t%s\t%s\t%s\t%s\t%s%n",
 					tr.algorithm,
 					tr.generator,
 					tr.generatorType, // Print generator type
@@ -126,7 +126,8 @@ public class Main {
 					double2String(res.averageComparisons()),
 					double2String(res.comparisonsStandardDeviation()),
 					double2String(res.averageTimeInMilliseconds()),
-					double2String(res.timeStandardDeviation()));
+					double2String(res.timeStandardDeviation()),
+					res.stable());
 		}
 	}
 

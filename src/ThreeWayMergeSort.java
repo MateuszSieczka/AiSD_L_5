@@ -18,7 +18,7 @@ public class ThreeWayMergeSort<T> extends AbstractSortingAlgorithm<T> {
     }
 
     private List<T> mergesort(List<T> list, int startIndex, int endIndex) {
-        // Base case: single element
+        // Case for single element
         if (startIndex == endIndex) {
             List<T> result = new ArrayList<>();
             result.add(list.get(startIndex));
@@ -84,7 +84,7 @@ public class ThreeWayMergeSort<T> extends AbstractSortingAlgorithm<T> {
             // Add the chosen element
             result.add(minElement);
 
-            // Advance the iterator for the list from which we took the element.
+            // Advance the iterator for the list from which the element was taken
             if (iterators[minIndex].hasNext()) {
                 current[minIndex] = iterators[minIndex].next();
             } else {
